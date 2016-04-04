@@ -27,4 +27,4 @@ Authors
 
 Invenio module providing integration between Invenio repositories and OpenDefinition.
 
-- CERN <info@invenio-software.org>
+- Sami Hiltunen <sami.mikael.hiltunen@cern.ch>

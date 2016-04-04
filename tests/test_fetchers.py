@@ -22,31 +22,19 @@
 # waive the privileges and immunities granted to it by virtue of its status
 # as an Intergovernmental Organization or submit itself to any jurisdiction.
 
-
-"""Module tests."""
+"""PID Fetchers tests."""
 
 from __future__ import absolute_import, print_function
 
-from flask import Flask
-from flask_babelex import Babel
+import uuid
 
-from invenio_opendefinition import InvenioOpenDefinition
-
-
-def test_version():
-    """Test version import."""
-    from invenio_opendefinition import __version__
-    assert __version__
+from invenio_opendefinition.fetchers import license_fetcher
 
 
-def test_init():
-    """Test extension initialization."""
-    app = Flask('testapp')
-    ext = InvenioOpenDefinition(app)
-    assert 'invenio-opendefinition' in app.extensions
-
-    app = Flask('testapp')
-    ext = InvenioOpenDefinition()
-    assert 'invenio-opendefinition' not in app.extensions
-    ext.init_app(app)
-    assert 'invenio-opendefinition' in app.extensions
+def test_license_fetcher():
+    """Test license fetcher."""
+    val = 'MIT'
+    pid = license_fetcher(uuid.uuid4(), {'id': val})
+    assert pid.provider is None
+    assert pid.pid_type is 'od_lic'
+    assert pid.pid_value is val

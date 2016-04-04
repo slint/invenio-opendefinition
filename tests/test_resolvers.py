@@ -22,31 +22,28 @@
 # waive the privileges and immunities granted to it by virtue of its status
 # as an Intergovernmental Organization or submit itself to any jurisdiction.
 
-
-"""Module tests."""
-
 from __future__ import absolute_import, print_function
 
-from flask import Flask
-from flask_babelex import Babel
+from jsonref import JsonRef
+from jsonresolver import JSONResolver
+from jsonresolver.contrib.jsonref import json_loader_factory
 
-from invenio_opendefinition import InvenioOpenDefinition
-
-
-def test_version():
-    """Test version import."""
-    from invenio_opendefinition import __version__
-    assert __version__
+from invenio_opendefinition.tasks import harvest_licenses
 
 
-def test_init():
-    """Test extension initialization."""
-    app = Flask('testapp')
-    ext = InvenioOpenDefinition(app)
-    assert 'invenio-opendefinition' in app.extensions
+def test_license_jsonref_resolver(app, licenses_example):
+    with app.app_context():
+        # load test data, mocked to data/opendefinition-licenses.json
+        harvest_licenses()
+        example_license = {
+            'license': {'$ref': 'http://localhost/licenses/MIT'}
+        }
 
-    app = Flask('testapp')
-    ext = InvenioOpenDefinition()
-    assert 'invenio-opendefinition' not in app.extensions
-    ext.init_app(app)
-    assert 'invenio-opendefinition' in app.extensions
+        json_resolver = JSONResolver(plugins=[
+            'invenio_opendefinition.resolvers'
+        ])
+        loader_cls = json_loader_factory(json_resolver)
+        loader = loader_cls()
+        out_json = JsonRef.replace_refs(example_license, loader=loader)
+        del out_json['license']['$schema']
+        assert out_json['license'] == licenses_example['MIT']

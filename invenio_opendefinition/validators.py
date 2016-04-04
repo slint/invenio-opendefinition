@@ -22,31 +22,27 @@
 # waive the privileges and immunities granted to it by virtue of its status
 # as an Intergovernmental Organization or submit itself to any jurisdiction.
 
+"""JSON schema validators."""
 
-"""Module tests."""
+import json
+from os.path import abspath, basename, dirname, split
 
-from __future__ import absolute_import, print_function
+import jsonschema
 
-from flask import Flask
-from flask_babelex import Babel
-
-from invenio_opendefinition import InvenioOpenDefinition
-
-
-def test_version():
-    """Test version import."""
-    from invenio_opendefinition import __version__
-    assert __version__
+import pkg_resources
 
 
-def test_init():
-    """Test extension initialization."""
-    app = Flask('testapp')
-    ext = InvenioOpenDefinition(app)
-    assert 'invenio-opendefinition' in app.extensions
+def validator_factory(schema_filename):
+    """Build a jsonschema validator."""
+    schema_dir = dirname(abspath(schema_filename))
 
-    app = Flask('testapp')
-    ext = InvenioOpenDefinition()
-    assert 'invenio-opendefinition' not in app.extensions
-    ext.init_app(app)
-    assert 'invenio-opendefinition' in app.extensions
+    with open(schema_filename) as file:
+        schema_json = json.load(file)
+
+    return jsonschema.Draft4Validator(schema_json)
+
+
+license_validator = validator_factory(pkg_resources.resource_filename(
+    'invenio_opendefinition',
+    'jsonschemas/licenses/license-v1.0.0.json'
+))

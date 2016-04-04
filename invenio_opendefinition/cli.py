@@ -22,31 +22,26 @@
 # waive the privileges and immunities granted to it by virtue of its status
 # as an Intergovernmental Organization or submit itself to any jurisdiction.
 
-
-"""Module tests."""
+"""Invenio module integrating Invenio repositories and OpenDefinition."""
 
 from __future__ import absolute_import, print_function
 
-from flask import Flask
-from flask_babelex import Babel
+import click
+import requests
 
-from invenio_opendefinition import InvenioOpenDefinition
+from flask import current_app
 
-
-def test_version():
-    """Test version import."""
-    from invenio_opendefinition import __version__
-    assert __version__
+from .tasks import harvest_licenses
 
 
-def test_init():
-    """Test extension initialization."""
-    app = Flask('testapp')
-    ext = InvenioOpenDefinition(app)
-    assert 'invenio-opendefinition' in app.extensions
+@click.group()
+def opendefinition():
+    """Invenio-OpenDefinition commands."""
+    pass
 
-    app = Flask('testapp')
-    ext = InvenioOpenDefinition()
-    assert 'invenio-opendefinition' not in app.extensions
-    ext.init_app(app)
-    assert 'invenio-opendefinition' in app.extensions
+
+@opendefinition.command('loadlicenses')
+def loadlicenses():
+    """Load licenses from OpenDefinitions to local database."""
+    harvest_licenses.delay()
+    click.echo('Loading licenses in a background job.')

@@ -22,31 +22,32 @@
 # waive the privileges and immunities granted to it by virtue of its status
 # as an Intergovernmental Organization or submit itself to any jurisdiction.
 
-
-"""Module tests."""
+"""Resolvers for Invenio-OpenDefinition."""
 
 from __future__ import absolute_import, print_function
 
-from flask import Flask
-from flask_babelex import Babel
-
-from invenio_opendefinition import InvenioOpenDefinition
-
-
-def test_version():
-    """Test version import."""
-    from invenio_opendefinition import __version__
-    assert __version__
+import jsonresolver
+from flask import current_app
+from invenio_pidstore.resolver import Resolver
+from invenio_records.api import Record
+from werkzeug.routing import Rule
 
 
-def test_init():
-    """Test extension initialization."""
-    app = Flask('testapp')
-    ext = InvenioOpenDefinition(app)
-    assert 'invenio-opendefinition' in app.extensions
+license_resolver = Resolver(
+    pid_type='od_lic', object_type='rec', getter=Record.get_record
+)
 
-    app = Flask('testapp')
-    ext = InvenioOpenDefinition()
-    assert 'invenio-opendefinition' not in app.extensions
-    ext.init_app(app)
-    assert 'invenio-opendefinition' in app.extensions
+
+def resolve_license_jsonref(pid):
+    """Resolve a license JSONref."""
+    _, record = license_resolver.resolve(pid)
+    return record
+
+
+@jsonresolver.hookimpl
+def jsonresolver_loader(url_map):
+    """Resolve OpenDefinition licenses."""
+    url_map.add(Rule(
+        '/licenses/<path:pid>',
+        endpoint=resolve_license_jsonref,
+        host=current_app.config['JSONSCHEMAS_HOST']))

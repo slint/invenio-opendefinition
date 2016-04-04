@@ -22,7 +22,8 @@
 # waive the privileges and immunities granted to it by virtue of its status
 # as an Intergovernmental Organization or submit itself to any jurisdiction.
 
-"""Version information for Invenio-OpenDefinition.
+"""
+Invenio module integrating Invenio repositories and OpenDefinition.
 
 This file is imported by ``invenio_opendefinition.__init__``,
 and parsed by ``setup.py``.

@@ -22,13 +22,11 @@
 # waive the privileges and immunities granted to it by virtue of its status
 # as an Intergovernmental Organization or submit itself to any jurisdiction.
 
-"""Invenio module providing integration between Invenio repositories and OpenDefinition."""
+"""Invenio module integrating Invenio repositories and OpenDefinition."""
 
 from __future__ import absolute_import, print_function
 
-from flask_babelex import gettext as _
-
-from .views import blueprint
+from . import config
 
 
 class InvenioOpenDefinition(object):
@@ -36,22 +34,16 @@ class InvenioOpenDefinition(object):
 
     def __init__(self, app=None):
         """Extension initialization."""
-        # TODO: This is an example of translation string with comment. Please
-        # remove it.
-        # NOTE: This is a note to a translator.
-        _('A translation string')
         if app:
             self.init_app(app)
 
     def init_app(self, app):
         """Flask application initialization."""
         self.init_config(app)
-        app.register_blueprint(blueprint)
         app.extensions['invenio-opendefinition'] = self
 
     def init_config(self, app):
         """Initialize configuration."""
-        app.config.setdefault(
-            "OPENDEFINITION_BASE_TEMPLATE",
-            app.config.get("BASE_TEMPLATE",
-                           "invenio_opendefinition/base.html"))
+        for k in dir(config):
+            if k.startswith('OPENDEFINITION_'):
+                app.config.setdefault(k, getattr(config, k))

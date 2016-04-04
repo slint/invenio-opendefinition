@@ -22,7 +22,7 @@
 # waive the privileges and immunities granted to it by virtue of its status
 # as an Intergovernmental Organization or submit itself to any jurisdiction.
 
-"""Invenio module providing integration between Invenio repositories and OpenDefinition."""
+"""Invenio module integrating Invenio repositories and OpenDefinition."""
 
 from __future__ import absolute_import, print_function
 

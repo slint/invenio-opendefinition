@@ -22,31 +22,10 @@
 # waive the privileges and immunities granted to it by virtue of its status
 # as an Intergovernmental Organization or submit itself to any jurisdiction.
 
-
-"""Module tests."""
-
-from __future__ import absolute_import, print_function
-
-from flask import Flask
-from flask_babelex import Babel
-
-from invenio_opendefinition import InvenioOpenDefinition
+from invenio_opendefinition.validators import license_validator
 
 
-def test_version():
-    """Test version import."""
-    from invenio_opendefinition import __version__
-    assert __version__
-
-
-def test_init():
-    """Test extension initialization."""
-    app = Flask('testapp')
-    ext = InvenioOpenDefinition(app)
-    assert 'invenio-opendefinition' in app.extensions
-
-    app = Flask('testapp')
-    ext = InvenioOpenDefinition()
-    assert 'invenio-opendefinition' not in app.extensions
-    ext.init_app(app)
-    assert 'invenio-opendefinition' in app.extensions
+def test_licenses_schema(licenses_example):
+    """Test that license schema validates the example file."""
+    for key in licenses_example:
+        license_validator.validate(licenses_example[key])

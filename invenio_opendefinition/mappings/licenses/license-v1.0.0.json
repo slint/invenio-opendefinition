@@ -1,0 +1,45 @@
+{
+  "mappings": {
+    "license-v1.0.0": {
+      "date_detection": false,
+      "numeric_detection": false,
+      "properties": {
+        "domain_content": {
+          "type": "boolean"
+        },
+        "domain_data": {
+          "type": "boolean"
+        },
+        "domain_software": {
+          "type": "boolean"
+        },
+        "family": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "is_generic": {
+          "type": "boolean"
+        },
+        "maintainer": {
+          "type": "string"
+        },
+        "od_conformance": {
+            "type": "string"
+        },
+        "osd_conformance": {
+            "type": "string"
+        },
+        "status": {
+            "type": "string"
+        },
+        "title": {
+            "type": "string"
+        }, 
+        "url": {
+            "type": "string"
+        }
+    }
+}

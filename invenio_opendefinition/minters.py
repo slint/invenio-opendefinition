@@ -22,31 +22,19 @@
 # waive the privileges and immunities granted to it by virtue of its status
 # as an Intergovernmental Organization or submit itself to any jurisdiction.
 
-
-"""Module tests."""
+"""PID minters for Invenio-OpenDefinition."""
 
 from __future__ import absolute_import, print_function
 
-from flask import Flask
-from flask_babelex import Babel
-
-from invenio_opendefinition import InvenioOpenDefinition
+from invenio_pidstore.models import PersistentIdentifier, PIDStatus
 
 
-def test_version():
-    """Test version import."""
-    from invenio_opendefinition import __version__
-    assert __version__
-
-
-def test_init():
-    """Test extension initialization."""
-    app = Flask('testapp')
-    ext = InvenioOpenDefinition(app)
-    assert 'invenio-opendefinition' in app.extensions
-
-    app = Flask('testapp')
-    ext = InvenioOpenDefinition()
-    assert 'invenio-opendefinition' not in app.extensions
-    ext.init_app(app)
-    assert 'invenio-opendefinition' in app.extensions
+def license_minter(record_uuid, data):
+    """Mint a persistent identifier for a license."""
+    return PersistentIdentifier.create(
+        'od_lic',
+        data['id'],
+        object_type='rec',
+        object_uuid=record_uuid,
+        status=PIDStatus.REGISTERED
+    )

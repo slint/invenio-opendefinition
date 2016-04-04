@@ -22,31 +22,30 @@
 # waive the privileges and immunities granted to it by virtue of its status
 # as an Intergovernmental Organization or submit itself to any jurisdiction.
 
+from click.testing import CliRunner
+from invenio_pidstore.models import PersistentIdentifier
+from invenio_pidstore.resolver import Resolver
 
-"""Module tests."""
-
-from __future__ import absolute_import, print_function
-
-from flask import Flask
-from flask_babelex import Babel
-
-from invenio_opendefinition import InvenioOpenDefinition
+from invenio_opendefinition.cli import opendefinition
+from invenio_opendefinition.resolvers import license_resolver
+from invenio_opendefinition.tasks import harvest_licenses
 
 
-def test_version():
-    """Test version import."""
-    from invenio_opendefinition import __version__
-    assert __version__
+def test_loadlicenses(script_info, licenses_example):
+    assert PersistentIdentifier.query.count() == 0
+    runner = CliRunner()
 
+    # Run twice to test the updating code also
+    for x in range(2):
+        result = runner.invoke(
+            opendefinition,
+            ['loadlicenses'],
+            obj=script_info
+        )
+        assert result.exit_code == 0
+        for license in licenses_example:
+            pid, record = license_resolver.resolve(license)
+            del record['$schema']
+            assert record == licenses_example[license]
 
-def test_init():
-    """Test extension initialization."""
-    app = Flask('testapp')
-    ext = InvenioOpenDefinition(app)
-    assert 'invenio-opendefinition' in app.extensions
-
-    app = Flask('testapp')
-    ext = InvenioOpenDefinition()
-    assert 'invenio-opendefinition' not in app.extensions
-    ext.init_app(app)
-    assert 'invenio-opendefinition' in app.extensions
+    assert PersistentIdentifier.query.count() == len(licenses_example)
