@@ -30,3 +30,5 @@ OPENDEFINITION_LICENSES_URL = \
     'http://licenses.opendefinition.org/licenses/groups/all.json'
 
 OPENDEFINITION_SCHEMAS_DEFAULT_LICENSE = 'licenses/license-v1.0.0.json'
+
+OPENDEFINITION_JSONRESOLVER_HOST = 'inveniosoftware.org'

@@ -22,30 +22,4 @@
 # waive the privileges and immunities granted to it by virtue of its status
 # as an Intergovernmental Organization or submit itself to any jurisdiction.
 
-"""Invenio module integrating Invenio repositories and OpenDefinition."""
-
-from __future__ import absolute_import, print_function
-
-from . import config
-from .cli import opendefinition
-
-
-class InvenioOpenDefinition(object):
-    """Invenio-OpenDefinition extension."""
-
-    def __init__(self, app=None):
-        """Extension initialization."""
-        if app:
-            self.init_app(app)
-
-    def init_app(self, app):
-        """Flask application initialization."""
-        self.init_config(app)
-        app.extensions['invenio-opendefinition'] = self
-        app.cli.add_command(opendefinition)
-
-    def init_config(self, app):
-        """Initialize configuration."""
-        for k in dir(config):
-            if k.startswith('OPENDEFINITION_'):
-                app.config.setdefault(k, getattr(config, k))
+"""OpenDefinition Elasticsearch mappings."""

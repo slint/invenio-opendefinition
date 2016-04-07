@@ -5,29 +5,71 @@
   "description": "JSON schema of an OpenDefinition license.",
   "definitions": {
     "conformance": {
-        "enum": [ "not reviewed", "rejected", "approved", ""]
+      "enum": [
+        "not reviewed",
+        "rejected",
+        "approved",
+        ""
+      ]
     }
   },
-
   "additionalProperties": false,
   "properties": {
-    "$schema": { "type": "string" },
-    "domain_content": { "type": "boolean" },
-    "domain_data": { "type": "boolean" },
-    "domain_software": { "type": "boolean" },
-    "family": { "type": "string" },
-    "id": { "type": "string" },
-    "is_generic": { "type": "boolean" },
-    "maintainer": { "type": "string" },
-    "od_conformance": { "$ref": "#/definitions/conformance" },
-    "osd_conformance": { "$ref": "#/definitions/conformance" },
-    "status": { "enum": [ "active", "superseded", "retired" ] },
-    "title": { "type": "string" },
-    "url": { "type": "string" }
+    "$schema": {
+      "type": "string"
+    },
+    "domain_content": {
+      "type": "boolean"
+    },
+    "domain_data": {
+      "type": "boolean"
+    },
+    "domain_software": {
+      "type": "boolean"
+    },
+    "family": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string"
+    },
+    "is_generic": {
+      "type": "boolean"
+    },
+    "maintainer": {
+      "type": "string"
+    },
+    "od_conformance": {
+      "$ref": "#/definitions/conformance"
+    },
+    "osd_conformance": {
+      "$ref": "#/definitions/conformance"
+    },
+    "status": {
+      "enum": [
+        "active",
+        "superseded",
+        "retired"
+      ]
+    },
+    "title": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    }
   },
-  "required": [ 
-    "domain_content", "domain_data", "domain_software", "family",
-    "id", "maintainer", "od_conformance", "osd_conformance", "status",
-    "title", "url"
+  "required": [
+    "domain_content",
+    "domain_data",
+    "domain_software",
+    "family",
+    "id",
+    "maintainer",
+    "od_conformance",
+    "osd_conformance",
+    "status",
+    "title",
+    "url"
   ]
 }

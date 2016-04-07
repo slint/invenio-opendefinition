@@ -22,13 +22,12 @@
 # waive the privileges and immunities granted to it by virtue of its status
 # as an Intergovernmental Organization or submit itself to any jurisdiction.
 
-
 """Module tests."""
 
 from __future__ import absolute_import, print_function
 
 from flask import Flask
-from flask_babelex import Babel
+from flask_cli import FlaskCLI
 
 from invenio_opendefinition import InvenioOpenDefinition
 
@@ -42,10 +41,12 @@ def test_version():
 def test_init():
     """Test extension initialization."""
     app = Flask('testapp')
+    FlaskCLI(app)
     ext = InvenioOpenDefinition(app)
     assert 'invenio-opendefinition' in app.extensions
 
     app = Flask('testapp')
+    FlaskCLI(app)
     ext = InvenioOpenDefinition()
     assert 'invenio-opendefinition' not in app.extensions
     ext.init_app(app)

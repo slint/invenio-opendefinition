@@ -22,7 +22,6 @@
 # waive the privileges and immunities granted to it by virtue of its status
 # as an Intergovernmental Organization or submit itself to any jurisdiction.
 
-
 """Pytest configuration."""
 
 from __future__ import absolute_import, print_function
@@ -31,11 +30,9 @@ import json
 import os
 import shutil
 import tempfile
-from os.path import abspath, dirname, join
+from os.path import dirname, join
 
 import httpretty
-import jsonschema
-import pkg_resources
 import pytest
 from flask import Flask
 from flask_celeryext import FlaskCeleryExt

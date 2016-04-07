@@ -22,6 +22,10 @@
 # waive the privileges and immunities granted to it by virtue of its status
 # as an Intergovernmental Organization or submit itself to any jurisdiction.
 
+"""Test schema."""
+
+from __future__ import absolute_import, print_function
+
 from invenio_opendefinition.validators import license_validator
 
 

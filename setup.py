@@ -34,6 +34,7 @@ history = open('CHANGES.rst').read()
 tests_require = [
     'check-manifest>=0.25',
     'coverage>=4.0',
+    'Flask-CLI>=0.2.1',
     'httpretty>=0.8.14',
     'isort>=4.2.2',
     'pydocstyle>=1.0.0',
@@ -117,6 +118,9 @@ setup(
         ],
         'invenio_jsonschemas.schemas': [
             'invenio_opendefinition = invenio_opendefinition.jsonschemas',
+        ],
+        'invenio_search.mappings': [
+            'licenses = invenio_opendefinition.mappings',
         ],
         'invenio_pidstore.fetchers': [
             'licenses = invenio_opendefinition.fetchers:license_fetcher',

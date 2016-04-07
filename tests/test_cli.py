@@ -22,16 +22,20 @@
 # waive the privileges and immunities granted to it by virtue of its status
 # as an Intergovernmental Organization or submit itself to any jurisdiction.
 
+"""Test CLI."""
+
+from __future__ import absolute_import, print_function
+
 from click.testing import CliRunner
 from invenio_pidstore.models import PersistentIdentifier
-from invenio_pidstore.resolver import Resolver
 
+from invenio_opendefinition import mappings
 from invenio_opendefinition.cli import opendefinition
 from invenio_opendefinition.resolvers import license_resolver
-from invenio_opendefinition.tasks import harvest_licenses
 
 
 def test_loadlicenses(script_info, licenses_example):
+    """Test load licenses."""
     assert PersistentIdentifier.query.count() == 0
     runner = CliRunner()
 

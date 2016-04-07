@@ -50,4 +50,4 @@ def jsonresolver_loader(url_map):
     url_map.add(Rule(
         '/licenses/<path:pid>',
         endpoint=resolve_license_jsonref,
-        host=current_app.config['JSONSCHEMAS_HOST']))
+        host=current_app.config['OPENDEFINITION_JSONRESOLVER_HOST']))

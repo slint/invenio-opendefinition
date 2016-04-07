@@ -22,6 +22,8 @@
 # waive the privileges and immunities granted to it by virtue of its status
 # as an Intergovernmental Organization or submit itself to any jurisdiction.
 
+"""Test resolvers."""
+
 from __future__ import absolute_import, print_function
 
 from jsonref import JsonRef
@@ -32,11 +34,12 @@ from invenio_opendefinition.tasks import harvest_licenses
 
 
 def test_license_jsonref_resolver(app, licenses_example):
+    """Test resolver."""
     with app.app_context():
         # load test data, mocked to data/opendefinition-licenses.json
         harvest_licenses()
         example_license = {
-            'license': {'$ref': 'http://localhost/licenses/MIT'}
+            'license': {'$ref': 'http://inveniosoftware.org/licenses/MIT'}
         }
 
         json_resolver = JSONResolver(plugins=[
