@@ -24,6 +24,9 @@
 
 """Invenio module integrating Invenio repositories and OpenDefinition."""
 
+from __future__ import absolute_import, print_function
+
 OPENDEFINITION_LICENSES_URL = \
     'http://licenses.opendefinition.org/licenses/groups/all.json'
+
 OPENDEFINITION_SCHEMAS_DEFAULT_LICENSE = 'licenses/license-v1.0.0.json'

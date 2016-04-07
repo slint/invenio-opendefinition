@@ -27,9 +27,6 @@
 from __future__ import absolute_import, print_function
 
 import click
-import requests
-
-from flask import current_app
 
 from .tasks import harvest_licenses
 

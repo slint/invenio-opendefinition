@@ -25,7 +25,6 @@
 """JSON schema validators."""
 
 import json
-from os.path import abspath, basename, dirname, split
 
 import jsonschema
 
@@ -34,8 +33,6 @@ import pkg_resources
 
 def validator_factory(schema_filename):
     """Build a jsonschema validator."""
-    schema_dir = dirname(abspath(schema_filename))
-
     with open(schema_filename) as file:
         schema_json = json.load(file)
 

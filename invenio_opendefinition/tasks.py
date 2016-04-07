@@ -24,13 +24,11 @@
 
 """Celery tasks."""
 
-
 from __future__ import absolute_import, print_function
 
 import requests
 from celery import shared_task
 from flask import current_app
-
 from invenio_db import db
 from invenio_pidstore.errors import PIDDoesNotExistError
 from invenio_records.api import Record
