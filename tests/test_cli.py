@@ -34,7 +34,7 @@ from invenio_opendefinition.cli import opendefinition
 from invenio_opendefinition.resolvers import license_resolver
 
 
-def test_loadlicenses(script_info, licenses_example):
+def test_loadlicenses(script_info, licenses_example, license_server_mock):
     """Test load licenses."""
     assert PersistentIdentifier.query.count() == 0
     runner = CliRunner()

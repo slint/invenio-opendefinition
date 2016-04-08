@@ -36,6 +36,8 @@ tests_require = [
     'coverage>=4.0',
     'Flask-CLI>=0.2.1',
     'httpretty>=0.8.14',
+    'invenio-records-rest>=1.0.0a7',
+    'invenio-search>=1.0.0a5',
     'isort>=4.2.2',
     'pydocstyle>=1.0.0',
     'pytest-cache>=1.0',
@@ -123,7 +125,8 @@ setup(
             'licenses = invenio_opendefinition.mappings',
         ],
         'invenio_pidstore.fetchers': [
-            'licenses = invenio_opendefinition.fetchers:license_fetcher',
+            'opendefinition_license_fetcher = '
+            'invenio_opendefinition.fetchers:license_fetcher',
         ],
         'invenio_pidstore.minters': [
             'opendefinition_license_minter = '

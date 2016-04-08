@@ -32,3 +32,24 @@ OPENDEFINITION_LICENSES_URL = \
 OPENDEFINITION_SCHEMAS_DEFAULT_LICENSE = 'licenses/license-v1.0.0.json'
 
 OPENDEFINITION_JSONRESOLVER_HOST = 'inveniosoftware.org'
+
+OPENDEFINITION_REST_ENDPOINTS = dict(
+    od_lic=dict(
+        pid_type='od_lic',
+        pid_minter='opendefinition_license_minter',
+        pid_fetcher='opendefinition_license_fetcher',
+        list_route='/licenses/',
+        item_route='/licenses/<path:pid_value>',
+        search_index='licenses',
+        search_type=None,
+        record_serializers={
+            'application/json': (
+                'invenio_records_rest.serializers:json_v1_response'),
+        },
+        search_serializers={
+            'application/json': (
+                'invenio_records_rest.serializers:json_v1_search'),
+        },
+        default_media_type='application/json',
+    ),
+)

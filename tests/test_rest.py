@@ -22,29 +22,28 @@
 # waive the privileges and immunities granted to it by virtue of its status
 # as an Intergovernmental Organization or submit itself to any jurisdiction.
 
-"""Test resolvers."""
-
 from __future__ import absolute_import, print_function
 
-from jsonref import JsonRef
-from jsonresolver import JSONResolver
-from jsonresolver.contrib.jsonref import json_loader_factory
+import json
 
+from invenio_pidstore.models import PersistentIdentifier
+from invenio_records_rest import InvenioRecordsREST
+
+from invenio_opendefinition.config import OPENDEFINITION_REST_ENDPOINTS
 from invenio_opendefinition.tasks import harvest_licenses
 
 
-def test_license_jsonref_resolver(
-        app, loaded_example_licenses):
-    """Test resolver."""
-    with app.app_context():
-        example_license = {
-            'license': {'$ref': 'http://inveniosoftware.org/licenses/MIT'}
-        }
+def test_records_rest(app, es, loaded_example_licenses):
+    """Test Records REST."""
+    app.config['RECORDS_REST_ENDPOINTS'] = OPENDEFINITION_REST_ENDPOINTS
+    InvenioRecordsREST(app)
+    assert PersistentIdentifier.query.count() == 109
 
-        json_resolver = JSONResolver(plugins=[
-            'invenio_opendefinition.resolvers'
-        ])
-        loader_cls = json_loader_factory(json_resolver)
-        loader = loader_cls()
-        out_json = JsonRef.replace_refs(example_license, loader=loader)
-        assert out_json['license'] == loaded_example_licenses['MIT']
+    with app.test_client() as client:
+        resp = client.get('/licenses/MIT')
+        assert resp.status_code == 200
+        resp_json = json.loads(resp.get_data(as_text=True))
+        assert resp_json['metadata'] == loaded_example_licenses['MIT']
+
+        resp = client.get('/licenses/')
+        assert resp.status_code == 200

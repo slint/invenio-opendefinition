@@ -34,6 +34,7 @@ from os.path import dirname, join
 
 import httpretty
 import pytest
+from elasticsearch.exceptions import RequestError
 from flask import Flask
 from flask_celeryext import FlaskCeleryExt
 from flask_cli import FlaskCLI, ScriptInfo
@@ -41,10 +42,12 @@ from invenio_db import InvenioDB, db
 from invenio_jsonschemas import InvenioJSONSchemas
 from invenio_pidstore import InvenioPIDStore
 from invenio_records import InvenioRecords
+from invenio_search import InvenioSearch, current_search
 from sqlalchemy_utils.functions import create_database, database_exists, \
     drop_database
 
 from invenio_opendefinition import InvenioOpenDefinition
+from invenio_opendefinition.tasks import create_or_update_license_record
 
 
 @pytest.yield_fixture
@@ -81,16 +84,8 @@ def app(licenses_example):
     def teardown():
         drop_database(str(db.engine.url))
 
-    httpretty.register_uri(
-        httpretty.GET,
-        app.config['OPENDEFINITION_LICENSES_URL'],
-        body=json.dumps(licenses_example),
-        content_type='application/json'
-    )
-
-    httpretty.enable()
     yield app
-    httpretty.disable()
+
     shutil.rmtree(instance_path)
 
 
@@ -101,6 +96,33 @@ def script_info(app):
         yield ScriptInfo(create_app=lambda info: app)
 
 
+@pytest.fixture
+def loaded_example_licenses(app, licenses_example):
+    with app.app_context():
+        for key in licenses_example:
+            create_or_update_license_record(licenses_example[key])
+    for key in licenses_example:
+        licenses_example[key]['$schema'] = 'http://{0}{1}/{2}'.format(
+            app.config['JSONSCHEMAS_HOST'],
+            app.config['JSONSCHEMAS_ENDPOINT'],
+            app.config['OPENDEFINITION_SCHEMAS_DEFAULT_LICENSE']
+        )
+    return licenses_example
+
+
+@pytest.yield_fixture
+def license_server_mock(app, licenses_example):
+    httpretty.register_uri(
+        httpretty.GET,
+        app.config['OPENDEFINITION_LICENSES_URL'],
+        body=json.dumps(licenses_example),
+        content_type='application/json'
+    )
+    httpretty.enable()
+    yield
+    httpretty.disable()
+
+
 @pytest.fixture(scope="session")
 def licenses_example():
     path = dirname(__file__)
@@ -109,3 +131,20 @@ def licenses_example():
             'data',
             'all-licenses.json')) as file:
         return json.load(file)
+
+
+@pytest.yield_fixture
+def es(app):
+    """Provide elasticsearch access."""
+    app.config.update(dict(
+        SEARCH_AUTOINDEX=[],
+    ))
+    InvenioSearch(app)
+    with app.app_context():
+        try:
+            list(current_search.create())
+        except RequestError:
+            list(current_search.delete(ignore=[404]))
+            list(current_search.create())
+        yield current_search
+        list(current_search.delete(ignore=[404]))
