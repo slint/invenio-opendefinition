@@ -51,5 +51,12 @@ OPENDEFINITION_REST_ENDPOINTS = dict(
                 'invenio_records_rest.serializers:json_v1_search'),
         },
         default_media_type='application/json',
+        suggesters={
+            'text': {
+                'completion': {
+                    'field': 'suggest',
+                }
+            }
+        },
     ),
 )

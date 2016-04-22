@@ -60,6 +60,7 @@ def app(licenses_example):
         SQLALCHEMY_DATABASE_URI=os.environ.get(
             'SQLALCHEMY_DATABASE_URI', 'sqlite://'),
         TESTING=True,
+        RECORDS_REST_DEFAULT_READ_PERMISSION_FACTORY=None,
         CELERY_ALWAYS_EAGER=True,
         CELERY_RESULT_BACKEND="cache",
         CELERY_CACHE_BACKEND="memory",

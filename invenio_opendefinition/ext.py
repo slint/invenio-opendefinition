@@ -26,8 +26,11 @@
 
 from __future__ import absolute_import, print_function
 
+from invenio_indexer.signals import before_record_index
+
 from . import config
 from .cli import opendefinition
+from .indexer import indexer_receiver
 
 
 class InvenioOpenDefinition(object):
@@ -41,8 +44,9 @@ class InvenioOpenDefinition(object):
     def init_app(self, app):
         """Flask application initialization."""
         self.init_config(app)
-        app.extensions['invenio-opendefinition'] = self
         app.cli.add_command(opendefinition)
+        before_record_index.connect(indexer_receiver, sender=app)
+        app.extensions['invenio-opendefinition'] = self
 
     def init_config(self, app):
         """Initialize configuration."""

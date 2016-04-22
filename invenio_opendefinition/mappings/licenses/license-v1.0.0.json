@@ -44,6 +44,12 @@
         "url": {
           "type": "string",
           "index": "not_analyzed"
+        },
+        "suggest": {
+          "type": "completion",
+          "analyzer" : "standard",
+          "search_analyzer" : "simple",
+          "payloads" : true
         }
       }
     }

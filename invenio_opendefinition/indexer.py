@@ -1,4 +1,3 @@
-#!/usr/bin/env bash
 # -*- coding: utf-8 -*-
 #
 # This file is part of Invenio.
@@ -23,9 +22,20 @@
 # waive the privileges and immunities granted to it by virtue of its status
 # as an Intergovernmental Organization or submit itself to any jurisdiction.
 
-pydocstyle invenio_opendefinition && \
-isort -rc -c -df **/*.py && \
-check-manifest --ignore ".travis-*" && \
-sphinx-build -qnNW docs docs/_build/html && \
-python setup.py test && \
-sphinx-build -qnNW -b doctest docs docs/_build/doctest
+"""Record modification prior to indexing."""
+
+from __future__ import absolute_import, print_function
+
+
+def indexer_receiver(sender, json=None, record=None, index=None,
+                     **dummy_kwargs):
+    """Connect to before_record_index signal to transform record for ES."""
+    if index.startswith('licenses-'):
+        # Generate suggest field
+        json['suggest'] = {
+            'input': [json['id'], json['title']],
+            'output': json['title'],
+            'payload': {
+                'id': json['id']
+            },
+        }

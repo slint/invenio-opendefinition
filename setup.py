@@ -36,8 +36,6 @@ tests_require = [
     'coverage>=4.0',
     'Flask-CLI>=0.2.1',
     'httpretty>=0.8.14',
-    'invenio-records-rest>=1.0.0a7',
-    'invenio-search>=1.0.0a5',
     'isort>=4.2.2',
     'pydocstyle>=1.0.0',
     'pytest-cache>=1.0',
@@ -69,17 +67,20 @@ for name, reqs in extras_require.items():
     extras_require['all'].extend(reqs)
 
 setup_requires = [
-    'pytest-runner>=2.6.2',
+    'pytest-runner>=2.7.0',
 ]
 
 install_requires = [
     'click>=6.4',
     'flask-celeryext>=0.2.0',
-    'invenio-jsonschemas>=1.0.0a2',
+    'invenio-indexer>=1.0.0a3',
+    'invenio-jsonschemas>=1.0.0a3',
     'invenio-pidstore>=1.0.0a7',
     'invenio-records>=1.0.0a14',
+    'invenio-records-rest>=1.0.0a10',
+    'invenio-search>=1.0.0a7',
     'jsonref>=0.1',
-    'jsonresolver>=0.1.1',
+    'jsonresolver>=0.2.1',
     'jsonschema>=2.5.1',
     'requests>=2.9.1',
 ]
