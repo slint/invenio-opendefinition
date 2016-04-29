@@ -27,11 +27,9 @@
 from __future__ import absolute_import, print_function
 
 import jsonresolver
-from flask import current_app
 from invenio_pidstore.resolver import Resolver
 from invenio_records.api import Record
 from werkzeug.routing import Rule
-
 
 license_resolver = Resolver(
     pid_type='od_lic', object_type='rec', getter=Record.get_record
@@ -47,6 +45,7 @@ def resolve_license_jsonref(pid):
 @jsonresolver.hookimpl
 def jsonresolver_loader(url_map):
     """Resolve OpenDefinition licenses."""
+    from flask import current_app
     url_map.add(Rule(
         '/licenses/<path:pid>',
         endpoint=resolve_license_jsonref,

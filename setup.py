@@ -116,6 +116,9 @@ setup(
         'invenio_i18n.translations': [
             'messages = invenio_opendefinition',
         ],
+        'invenio_records.jsonresolver': [
+            'invenio_opendefinition = invenio_opendefinition.resolvers',
+        ],
         'invenio_celery.tasks': [
             'invenio_opendefinition = invenio_opendefinition.tasks',
         ],
