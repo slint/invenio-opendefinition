@@ -42,6 +42,7 @@ from invenio_db import InvenioDB, db
 from invenio_jsonschemas import InvenioJSONSchemas
 from invenio_pidstore import InvenioPIDStore
 from invenio_records import InvenioRecords
+from invenio_records_rest.utils import PIDConverter
 from invenio_search import InvenioSearch, current_search
 from sqlalchemy_utils.functions import create_database, database_exists, \
     drop_database
@@ -66,6 +67,8 @@ def app(licenses_example):
         CELERY_CACHE_BACKEND="memory",
         CELERY_EAGER_PROPAGATES_EXCEPTIONS=True,
     )
+
+    app.url_map.converters['pid'] = PIDConverter
 
     FlaskCeleryExt(app)
     FlaskCLI(app)
