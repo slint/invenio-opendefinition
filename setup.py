@@ -34,7 +34,6 @@ history = open('CHANGES.rst').read()
 tests_require = [
     'check-manifest>=0.25',
     'coverage>=4.0',
-    'Flask-CLI>=0.2.1',
     'httpretty>=0.8.14',
     'isort>=4.2.2',
     'pydocstyle>=1.0.0',
@@ -71,6 +70,7 @@ setup_requires = [
 ]
 
 install_requires = [
+    'Flask>=0.11.1',
     'click>=6.4',
     'flask-celeryext>=0.2.0',
     'invenio-indexer>=1.0.0a3',
