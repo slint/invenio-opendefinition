@@ -36,11 +36,9 @@ Run example development server:
 from __future__ import absolute_import, print_function
 
 from flask import Flask
-from flask_babelex import Babel
 
 from invenio_opendefinition import InvenioOpenDefinition
 
 # Create Flask application
 app = Flask(__name__)
-Babel(app)
 InvenioOpenDefinition(app)
