@@ -24,7 +24,7 @@ Installation
 Documentation
 -------------
 
-   http://pythonhosted.org/invenio-opendefinition/
+   http://invenio-opendefinition.readthedocs.io/
 
 Happy hacking and thanks for flying Invenio-OpenDefinition.
 

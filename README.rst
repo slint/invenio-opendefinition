@@ -46,4 +46,4 @@ Invenio module providing integration between Invenio repositories and OpenDefini
 *This is an experimental developer preview release.*
 
 * Free software: GPLv2 license
-* Documentation: https://pythonhosted.org/invenio-opendefinition/
+* Documentation: https://invenio-opendefinition.readthedocs.io/
