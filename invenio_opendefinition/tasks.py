@@ -38,19 +38,8 @@ from .resolvers import license_resolver
 from .validators import license_validator
 
 
-@shared_task(ignore_result=True)
-def harvest_licenses():
-    """Harvest OpenDefinition licenses."""
-    response = requests.get(current_app.config['OPENDEFINITION_LICENSES_URL'])
-    licenses = response.json()
-    for license in licenses:
-        license_validator.validate(license)
-        create_or_update_license_record.delay(licenses[license])
-
-
-@shared_task(ignore_result=True)
-def create_or_update_license_record(license):
-    """Register a license."""
+def upsert_license_record(license):
+    """Insert or update a license record."""
     license['$schema'] = 'http://{0}{1}/{2}'.format(
         current_app.config['JSONSCHEMAS_HOST'],
         current_app.config['JSONSCHEMAS_ENDPOINT'],
@@ -61,8 +50,29 @@ def create_or_update_license_record(license):
         pid, record = license_resolver.resolve(license['id'])
         record.update(license)
         record.commit()
-        db.session.commit()
     except PIDDoesNotExistError:
         record = Record.create(license)
         license_minter(record.id, license)
-        db.session.commit()
+
+
+def import_licenses_from_json(licenses):
+    """Import licenses."""
+    for _, license in licenses.items():
+        license_validator.validate(license)
+        create_or_update_license_record(license)
+
+
+@shared_task(ignore_result=True)
+def create_or_update_license_record(license):
+    """Register a license."""
+    upsert_license_record(license)
+    db.session.commit()
+
+
+@shared_task(ignore_result=True)
+def harvest_licenses():
+    """Harvest OpenDefinition licenses."""
+    response = requests.get(current_app.config['OPENDEFINITION_LICENSES_URL'])
+    licenses = response.json()
+    import_licenses_from_json(licenses)
+    db.session.commit()
