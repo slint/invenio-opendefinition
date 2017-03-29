@@ -27,7 +27,6 @@
 import json
 
 import jsonschema
-
 import pkg_resources
 
 

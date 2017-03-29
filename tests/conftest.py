@@ -36,8 +36,8 @@ import httpretty
 import pytest
 from elasticsearch.exceptions import RequestError
 from flask import Flask
+from flask.cli import ScriptInfo
 from flask_celeryext import FlaskCeleryExt
-from flask_cli import FlaskCLI, ScriptInfo
 from invenio_db import InvenioDB, db
 from invenio_jsonschemas import InvenioJSONSchemas
 from invenio_pidstore import InvenioPIDStore
@@ -71,7 +71,6 @@ def app(licenses_example):
     app.url_map.converters['pid'] = PIDConverter
 
     FlaskCeleryExt(app)
-    FlaskCLI(app)
     InvenioDB(app)
     InvenioJSONSchemas(app)
     InvenioRecords(app)
