@@ -1,8 +1,8 @@
 =================================
- Invenio-OpenDefinition v1.0.0a3
+ Invenio-OpenDefinition v1.0.0a4
 =================================
 
-Invenio-OpenDefinition v1.0.0a3 was released on June 15, 2016.
+Invenio-OpenDefinition v1.0.0a4 was released on April 11, 2017.
 
 About
 -----
@@ -19,7 +19,7 @@ What's new
 Installation
 ------------
 
-   $ pip install invenio-opendefinition==1.0.0a3
+   $ pip install invenio-opendefinition==1.0.0a4
 
 Documentation
 -------------
