@@ -50,6 +50,13 @@ extras_require = {
     'sqlite': [
         'invenio-db>=1.0.0a9',
     ],
+    # Elasticsearch version
+    'elasticsearch2': [
+        'invenio-search[elasticsearch2]>=1.0.0a10',
+    ],
+    'elasticsearch5': [
+        'invenio-search[elasticsearch5]>=1.0.0a10',
+    ],
     'mysql': [
         'invenio-db[mysql]>=1.0.0a9',
     ],
@@ -78,7 +85,6 @@ install_requires = [
     'invenio-pidstore>=1.0.0b1',
     'invenio-records>=1.0.0b1',
     'invenio-records-rest>=1.0.0a18',
-    'invenio-search>=1.0.0a9',
     'jsonref>=0.1',
     'jsonresolver>=0.2.1',
     'jsonschema>=2.5.1',

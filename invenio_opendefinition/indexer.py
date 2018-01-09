@@ -26,16 +26,25 @@
 
 from __future__ import absolute_import, print_function
 
+from elasticsearch import VERSION as ES_VERSION
+
 
 def indexer_receiver(sender, json=None, record=None, index=None,
                      **dummy_kwargs):
     """Connect to before_record_index signal to transform record for ES."""
     if index.startswith('licenses-'):
         # Generate suggest field
-        json['suggest'] = {
-            'input': [json['id'], json['title']],
-            'output': json['title'],
-            'payload': {
-                'id': json['id']
-            },
-        }
+        if ES_VERSION[0] == 5:
+            json['suggest'] = {
+                'input': [json['id'], json['title']],
+                'output': json['title'],
+            }
+        else:
+            json['suggest'] = {
+                'input': [json['id'], json['title']],
+                'output': json['title'],
+                'payload': {
+                    'id': json['id']
+                },
+            }
+
