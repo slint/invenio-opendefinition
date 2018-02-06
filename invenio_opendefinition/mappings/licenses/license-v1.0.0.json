@@ -26,6 +26,10 @@
         "maintainer": {
           "type": "string"
         },
+        "legacy_ids" : {
+          "type": "string",
+          "index": "not_analyzed"
+        },
         "od_conformance": {
           "type": "string",
           "index": "not_analyzed"

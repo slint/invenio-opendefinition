@@ -40,21 +40,24 @@ tests_require = [
     'pytest-cache>=1.0',
     'pytest-cov>=1.8.0',
     'pytest-pep8>=1.0.6',
-    'pytest>=2.8.0',
+    'pytest>=3.3.1',
 ]
+
+db_version = '>=1.0.0b9'
 
 extras_require = {
     'docs': [
         'Sphinx>=1.4.2',
     ],
-    'sqlite': [
-        'invenio-db>=1.0.0a9',
+    # Database version
+    'postgresql': [
+        'invenio-db[postgresql,versioning]{}'.format(db_version),
     ],
     'mysql': [
-        'invenio-db[mysql]>=1.0.0a9',
+        'invenio-db[mysql,versioning]{}'.format(db_version),
     ],
-    'postgresql': [
-        'invenio-db[postgresql]>=1.0.0a9',
+    'sqlite': [
+        'invenio-db[versioning]{}'.format(db_version),
     ],
     'tests': tests_require,
 }
@@ -78,7 +81,7 @@ install_requires = [
     'invenio-pidstore>=1.0.0b1',
     'invenio-records>=1.0.0b1',
     'invenio-records-rest>=1.0.0a18',
-    'invenio-search>=1.0.0a9',
+    'invenio-search==1.0.0b1',  # support to ES 5/6 not tested
     'jsonref>=0.1',
     'jsonresolver>=0.2.1',
     'jsonschema>=2.5.1',

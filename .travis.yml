@@ -38,18 +38,17 @@ cache:
 services:
   - mysql
   - postgresql
-  - elasticsearch
 
 env:
-  - REQUIREMENTS=lowest EXTRAS=all,sqlite SQLALCHEMY_DATABASE_URI="sqlite:///test.db"
-  - REQUIREMENTS=lowest EXTRAS=all,mysql SQLALCHEMY_DATABASE_URI="mysql+pymysql://travis@localhost:3306/invenio"
-  - REQUIREMENTS=lowest EXTRAS=all,postgresql SQLALCHEMY_DATABASE_URI="postgresql+psycopg2://postgres@localhost:5432/invenio"
-  - REQUIREMENTS=release EXTRAS=all,sqlite SQLALCHEMY_DATABASE_URI="sqlite:///test.db"
-  - REQUIREMENTS=release EXTRAS=all,mysql SQLALCHEMY_DATABASE_URI="mysql+pymysql://travis@localhost:3306/invenio"
-  - REQUIREMENTS=release E2E_WEBDRIVER_BROWSERS="Firefox" EXTRAS=all,postgresql SQLALCHEMY_DATABASE_URI="postgresql+psycopg2://postgres@localhost:5432/invenio"
-  - REQUIREMENTS=devel EXTRAS=all,sqlite SQLALCHEMY_DATABASE_URI="sqlite:///test.db"
-  - REQUIREMENTS=devel EXTRAS=all,mysql SQLALCHEMY_DATABASE_URI="mysql+pymysql://travis@localhost:3306/invenio"
-  - REQUIREMENTS=devel EXTRAS=all,postgresql SQLALCHEMY_DATABASE_URI="postgresql+psycopg2://postgres@localhost:5432/invenio"
+  - REQUIREMENTS=lowest EXTRAS=all,sqlite SQLALCHEMY_DATABASE_URI="sqlite:///test.db" ES_VERSION=2.2.0
+  - REQUIREMENTS=lowest EXTRAS=all,mysql SQLALCHEMY_DATABASE_URI="mysql+pymysql://travis@localhost:3306/invenio" ES_VERSION=2.2.0
+  - REQUIREMENTS=lowest EXTRAS=all,postgresql SQLALCHEMY_DATABASE_URI="postgresql+psycopg2://postgres@localhost:5432/invenio" ES_VERSION=2.2.0
+  - REQUIREMENTS=release EXTRAS=all,sqlite SQLALCHEMY_DATABASE_URI="sqlite:///test.db" ES_VERSION=2.2.0
+  - REQUIREMENTS=release EXTRAS=all,mysql SQLALCHEMY_DATABASE_URI="mysql+pymysql://travis@localhost:3306/invenio" ES_VERSION=2.2.0
+  - REQUIREMENTS=release E2E_WEBDRIVER_BROWSERS="Firefox" EXTRAS=all,postgresql SQLALCHEMY_DATABASE_URI="postgresql+psycopg2://postgres@localhost:5432/invenio" ES_VERSION=2.2.0
+  - REQUIREMENTS=devel EXTRAS=all,sqlite SQLALCHEMY_DATABASE_URI="sqlite:///test.db" ES_VERSION=2.2.0
+  - REQUIREMENTS=devel EXTRAS=all,mysql SQLALCHEMY_DATABASE_URI="mysql+pymysql://travis@localhost:3306/invenio" ES_VERSION=2.2.0
+  - REQUIREMENTS=devel EXTRAS=all,postgresql SQLALCHEMY_DATABASE_URI="postgresql+psycopg2://postgres@localhost:5432/invenio" ES_VERSION=2.2.0
 
 
 python:
@@ -57,6 +56,10 @@ python:
   - "3.5"
 
 before_install:
+  - "mkdir /tmp/elasticsearch"
+  - "wget -O - https://download.elasticsearch.org/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/${ES_VERSION}/elasticsearch-${ES_VERSION}.tar.gz | tar xz --directory=/tmp/elasticsearch --strip-components=1"
+  - "/tmp/elasticsearch/bin/plugin install -b mapper-attachments"
+  - "/tmp/elasticsearch/bin/elasticsearch > /tmp/local-es.log &"
   - "travis_retry pip install --upgrade pip setuptools py"
   - "travis_retry pip install twine wheel coveralls requirements-builder"
   - "requirements-builder --level=min setup.py > .travis-lowest-requirements.txt"

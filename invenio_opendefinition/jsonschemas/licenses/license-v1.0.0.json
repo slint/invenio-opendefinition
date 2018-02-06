@@ -39,6 +39,9 @@
     "maintainer": {
       "type": "string"
     },
+    "legacy_ids" : {
+      "type": "array"
+    },
     "od_conformance": {
       "$ref": "#/definitions/conformance"
     },
