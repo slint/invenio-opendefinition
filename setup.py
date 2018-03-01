@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Invenio.
-# Copyright (C) 2016 CERN.
+# Copyright (C) 2016, 2018 CERN.
 #
 # Invenio is free software; you can redistribute it
 # and/or modify it under the terms of the GNU General Public License as
@@ -76,12 +76,12 @@ install_requires = [
     'Flask>=0.11.1',
     'click>=6.4',
     'flask-celeryext>=0.2.0',
-    'invenio-indexer>=1.0.0a9',
+    'invenio-indexer>=1.0.0b1',
     'invenio-jsonschemas>=1.0.0a3',
     'invenio-pidstore>=1.0.0b1',
     'invenio-records>=1.0.0b1',
     'invenio-records-rest>=1.0.0a18',
-    'invenio-search==1.0.0b1',  # support to ES 5/6 not tested
+    'invenio-search[elasticsearch2]>=1.0.0b4',  # support to ES 5/6 not tested
     'jsonref>=0.1',
     'jsonresolver>=0.2.1',
     'jsonschema>=2.5.1',
