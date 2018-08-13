@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Invenio.
-# Copyright (C) 2016-2018 CERN.
+# Copyright (C) 2018 CERN.
 #
 # Invenio is free software; you can redistribute it
 # and/or modify it under the terms of the GNU General Public License as
@@ -22,16 +22,12 @@
 # waive the privileges and immunities granted to it by virtue of its status
 # as an Intergovernmental Organization or submit itself to any jurisdiction.
 
-"""Invenio module integrating Invenio repositories and OpenDefinition."""
+"""Proxy to the current module."""
 
 from __future__ import absolute_import, print_function
 
-from .ext import InvenioOpenDefinition
-from .version import __version__
-from .proxies import current_opendefinition
+from flask import current_app
+from werkzeug.local import LocalProxy
 
-__all__ = (
-    '__version__',
-    'current_opendefinition',
-    'InvenioOpenDefinition',
-)
+current_opendefinition = LocalProxy(
+    lambda: current_app.extensions['invenio-opendefinition'])
