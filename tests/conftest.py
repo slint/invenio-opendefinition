@@ -52,7 +52,7 @@ from invenio_opendefinition.tasks import create_or_update_license_record
 
 
 @pytest.yield_fixture
-def app(licenses_example):
+def app(od_licenses_json):
     """Flask application fixture."""
     instance_path = tempfile.mkdtemp()
     app = Flask('testapp', instance_path=instance_path)
@@ -81,6 +81,15 @@ def app(licenses_example):
         if str(db.engine.url) != "sqlite://" and \
            not database_exists(str(db.engine.url)):
             create_database(str(db.engine.url))
+
+        # MySQL has case-sensitivity issues with its default collation. To fix
+        # this, we alter the created database's charset and collation.
+        if str(db.engine.url).startswith('mysql'):
+            conn = db.engine.connect()
+            conn.execute('COMMIT')  # close the current transaction
+            conn.execute('ALTER DATABASE invenio '
+                         'CHARACTER SET utf8 COLLATE utf8_bin')
+            conn.close()
         db.drop_all()
         db.create_all()
 
@@ -100,31 +109,31 @@ def script_info(app):
 
 
 @pytest.fixture
-def loaded_example_licenses(app, licenses_example):
+def loaded_example_licenses(app, od_licenses_json):
     with app.app_context():
-        for key in licenses_example:
-            create_or_update_license_record(licenses_example[key])
-    for key in licenses_example:
-        licenses_example[key]['$schema'] = 'http://{0}{1}/{2}'.format(
+        for key in od_licenses_json:
+            create_or_update_license_record(od_licenses_json[key])
+    for key in od_licenses_json:
+        od_licenses_json[key]['$schema'] = 'http://{0}{1}/{2}'.format(
             app.config['JSONSCHEMAS_HOST'],
             app.config['JSONSCHEMAS_ENDPOINT'],
             app.config['OPENDEFINITION_SCHEMAS_DEFAULT_LICENSE']
         )
-    return licenses_example
+    return od_licenses_json
 
 
 @pytest.yield_fixture
-def license_server_mock(app, licenses_example, spdx_licenses_example):
+def license_server_mock(app, od_licenses_json, spdx_licenses_json):
     httpretty.register_uri(
         httpretty.GET,
         app.config['OPENDEFINITION_LICENSES_URL'],
-        body=json.dumps(licenses_example),
+        body=json.dumps(od_licenses_json),
         content_type='application/json'
     )
     httpretty.register_uri(
         httpretty.GET,
         app.config['OPENDEFINITION_SPDX_LICENSES_URL'],
-        body=json.dumps(spdx_licenses_example),
+        body=json.dumps(spdx_licenses_json),
         content_type='application/json'
     )
     httpretty.enable()
@@ -133,16 +142,24 @@ def license_server_mock(app, licenses_example, spdx_licenses_example):
 
 
 @pytest.fixture(scope="session")
-def licenses_example():
-    path = dirname(__file__)
-    with open(join(path, 'data', 'opendefinition.json')) as file:
+def od_licenses_path():
+    return join(dirname(__file__), 'data', 'opendefinition.json')
+
+
+@pytest.fixture(scope="session")
+def od_licenses_json(od_licenses_path):
+    with open(od_licenses_path) as file:
         return json.load(file)
 
 
 @pytest.fixture(scope="session")
-def spdx_licenses_example():
-    path = dirname(__file__)
-    with open(join(path, 'data', 'spdx.json')) as file:
+def spdx_licenses_path():
+    return join(dirname(__file__), 'data', 'spdx.json')
+
+
+@pytest.fixture(scope="session")
+def spdx_licenses_json(spdx_licenses_path):
+    with open(spdx_licenses_path) as file:
         return json.load(file)
 
 

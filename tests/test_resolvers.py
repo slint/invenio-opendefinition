@@ -31,12 +31,11 @@ from jsonresolver import JSONResolver
 from jsonresolver.contrib.jsonref import json_loader_factory
 
 
-def test_license_jsonref_resolver(
-        app, loaded_example_licenses):
+def test_license_jsonref_resolver(app, loaded_example_licenses):
     """Test resolver."""
     with app.app_context():
         example_license = {
-            'license': {'$ref': 'http://inveniosoftware.org/licenses/MIT'}
+            'license': {'$ref': 'http://inveniosoftware.org/licenses/mit'}
         }
 
         json_resolver = JSONResolver(plugins=[

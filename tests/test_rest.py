@@ -42,13 +42,14 @@ def test_records_rest(app, es, loaded_example_licenses):
     if 'invenio_records_rest.od_lic_item' not in app_endpoints:
         app.register_blueprint(create_blueprint(OPENDEFINITION_REST_ENDPOINTS))
 
-    assert PersistentIdentifier.query.count() == 109
+    assert PersistentIdentifier.query.count() == 202
 
     with app.test_client() as client:
-        resp = client.get('/licenses/MIT')
-        assert resp.status_code == 200
-        resp_json = json.loads(resp.get_data(as_text=True))
-        assert resp_json['metadata'] == loaded_example_licenses['MIT']
+        for license_id in ('MIT', 'mit'):
+            resp = client.get('/licenses/{}'.format(license_id))
+            assert resp.status_code == 200
+            resp_json = json.loads(resp.get_data(as_text=True))
+            assert resp_json['metadata'] == loaded_example_licenses['MIT']
 
-        resp = client.get('/licenses/')
-        assert resp.status_code == 200
+            resp = client.get('/licenses/')
+            assert resp.status_code == 200

@@ -29,7 +29,7 @@ from __future__ import absolute_import, print_function
 from invenio_opendefinition.validators import license_validator
 
 
-def test_licenses_schema(licenses_example):
+def test_licenses_schema(od_licenses_json):
     """Test that license schema validates the example file."""
-    for key in licenses_example:
-        license_validator.validate(licenses_example[key])
+    for key in od_licenses_json:
+        license_validator.validate(od_licenses_json[key])
