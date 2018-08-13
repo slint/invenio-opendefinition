@@ -52,7 +52,7 @@
         "suggest": {
           "type": "completion",
           "analyzer" : "standard",
-          "search_analyzer" : "simple",
+          "search_analyzer" : "standard",
           "payloads" : true
         }
       }
