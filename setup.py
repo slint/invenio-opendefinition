@@ -43,7 +43,7 @@ tests_require = [
     'pytest>=3.3.1',
 ]
 
-db_version = '>=1.0.0b9'
+db_version = '>=1.0.0'
 
 extras_require = {
     'docs': [
