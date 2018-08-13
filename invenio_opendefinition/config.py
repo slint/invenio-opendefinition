@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Invenio.
-# Copyright (C) 2016 CERN.
+# Copyright (C) 2016-2018 CERN.
 #
 # Invenio is free software; you can redistribute it
 # and/or modify it under the terms of the GNU General Public License as
@@ -28,6 +28,13 @@ from __future__ import absolute_import, print_function
 
 OPENDEFINITION_LICENSES_URL = \
     'http://licenses.opendefinition.org/licenses/groups/all.json'
+
+OPENDEFINITION_SPDX_LICENSES_URL = 'https://spdx.org/licenses/licenses.json'
+
+OPENDEFINITION_LOADERS = {
+    'opendefinition': 'invenio_opendefinition.loaders.harvest_opendefinition',
+    'spdx': 'invenio_opendefinition.loaders.harvest_spdx',
+}
 
 OPENDEFINITION_SCHEMAS_DEFAULT_LICENSE = 'licenses/license-v1.0.0.json'
 
