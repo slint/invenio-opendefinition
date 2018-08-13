@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Invenio.
-# Copyright (C) 2016 CERN.
+# Copyright (C) 2016-2018 CERN.
 #
 # Invenio is free software; you can redistribute it
 # and/or modify it under the terms of the GNU General Public License as
@@ -114,11 +114,17 @@ def loaded_example_licenses(app, licenses_example):
 
 
 @pytest.yield_fixture
-def license_server_mock(app, licenses_example):
+def license_server_mock(app, licenses_example, spdx_licenses_example):
     httpretty.register_uri(
         httpretty.GET,
         app.config['OPENDEFINITION_LICENSES_URL'],
         body=json.dumps(licenses_example),
+        content_type='application/json'
+    )
+    httpretty.register_uri(
+        httpretty.GET,
+        app.config['OPENDEFINITION_SPDX_LICENSES_URL'],
+        body=json.dumps(spdx_licenses_example),
         content_type='application/json'
     )
     httpretty.enable()
@@ -129,10 +135,14 @@ def license_server_mock(app, licenses_example):
 @pytest.fixture(scope="session")
 def licenses_example():
     path = dirname(__file__)
-    with open(join(
-            path,
-            'data',
-            'all-licenses.json')) as file:
+    with open(join(path, 'data', 'opendefinition.json')) as file:
+        return json.load(file)
+
+
+@pytest.fixture(scope="session")
+def spdx_licenses_example():
+    path = dirname(__file__)
+    with open(join(path, 'data', 'spdx.json')) as file:
         return json.load(file)
 
 

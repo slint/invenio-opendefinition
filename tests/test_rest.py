@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Invenio.
-# Copyright (C) 2016 CERN.
+# Copyright (C) 2016-2018 CERN.
 #
 # Invenio is free software; you can redistribute it
 # and/or modify it under the terms of the GNU General Public License as
@@ -28,15 +28,20 @@ import json
 
 from invenio_pidstore.models import PersistentIdentifier
 from invenio_records_rest import InvenioRecordsREST
+from invenio_records_rest.views import create_blueprint
 
 from invenio_opendefinition.config import OPENDEFINITION_REST_ENDPOINTS
-from invenio_opendefinition.tasks import harvest_licenses
 
 
 def test_records_rest(app, es, loaded_example_licenses):
     """Test Records REST."""
     app.config['RECORDS_REST_ENDPOINTS'] = OPENDEFINITION_REST_ENDPOINTS
     InvenioRecordsREST(app)
+    # invenio-records-rest >= 1.1.0 doesn't automatically register endpoints
+    app_endpoints = app.url_map._rules_by_endpoint
+    if 'invenio_records_rest.od_lic_item' not in app_endpoints:
+        app.register_blueprint(create_blueprint(OPENDEFINITION_REST_ENDPOINTS))
+
     assert PersistentIdentifier.query.count() == 109
 
     with app.test_client() as client:

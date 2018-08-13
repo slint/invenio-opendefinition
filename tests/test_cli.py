@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # This file is part of Invenio.
-# Copyright (C) 2016 CERN.
+# Copyright (C) 2016-2018 CERN.
 #
 # Invenio is free software; you can redistribute it
 # and/or modify it under the terms of the GNU General Public License as
@@ -29,15 +29,16 @@ from __future__ import absolute_import, print_function
 from click.testing import CliRunner
 from invenio_pidstore.models import PersistentIdentifier
 
-from invenio_opendefinition import mappings
 from invenio_opendefinition.cli import opendefinition
 from invenio_opendefinition.resolvers import license_resolver
 
 
-def test_loadlicenses(script_info, licenses_example, license_server_mock):
+def test_loadlicenses(script_info, licenses_example, spdx_licenses_example,
+                      license_server_mock):
     """Test load licenses."""
     assert PersistentIdentifier.query.count() == 0
     runner = CliRunner()
+    unique_licenses = set()
 
     # Run twice to test the updating code also
     for x in range(2):
@@ -47,9 +48,27 @@ def test_loadlicenses(script_info, licenses_example, license_server_mock):
             obj=script_info
         )
         assert result.exit_code == 0
-        for license in licenses_example:
-            pid, record = license_resolver.resolve(license)
+        for license_id in licenses_example:
+            pid, record = license_resolver.resolve(license_id)
             del record['$schema']
-            assert record == licenses_example[license]
+            assert record == licenses_example[license_id]
+            unique_licenses.add(license_id)
 
-    assert PersistentIdentifier.query.count() == len(licenses_example)
+    assert PersistentIdentifier.query.count() == len(unique_licenses)
+
+    # Load spdx.org licenses now
+    for x in range(2):
+        result = runner.invoke(
+            opendefinition,
+            ['loadlicenses', '--source', 'spdx'],
+            obj=script_info
+        )
+        assert result.exit_code == 0
+        for license in spdx_licenses_example['licenses']:
+            pid, record = license_resolver.resolve(license['licenseId'])
+            del record['$schema']
+            assert record['title'] == license['name']
+            assert record['url'] == license['seeAlso'][-1]
+            unique_licenses.add(license['licenseId'])
+
+    assert PersistentIdentifier.query.count() == len(unique_licenses)
