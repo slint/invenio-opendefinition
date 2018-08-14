@@ -73,6 +73,7 @@ def upsert_license_record(license):
         license_copy = deepcopy(record)
         license_copy['id'] = license_id
         license_minter(record.id, license_copy)
+    return record
 
 
 def harvest_opendefinition(filepath=None):

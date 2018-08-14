@@ -52,4 +52,26 @@ def test_records_rest(app, es, loaded_example_licenses):
             assert resp_json['metadata'] == loaded_example_licenses['MIT']
 
             resp = client.get('/licenses/')
+            resp_json = json.loads(resp.get_data(as_text=True))
             assert resp.status_code == 200
+            assert resp_json['hits']['total'] == 109
+
+            resp = client.get('/licenses/_suggest?text=mit')
+            resp_json = json.loads(resp.get_data(as_text=True))
+            assert resp.status_code == 200
+
+            options = resp_json['text'][0]['options']
+            assert len(options) == 2
+            assert {(o['payload']['id'], o['text']) for o in options} == {
+                ('MIT', 'MIT License'),
+                ('mitre', 'MITRE Collaborative Virtual Workspace License '
+                 '(CVW License)')}
+
+            resp = client.get('/licenses/_suggest?text=cc0')
+            resp_json = json.loads(resp.get_data(as_text=True))
+            assert resp.status_code == 200
+
+            options = resp_json['text'][0]['options']
+            assert len(options) == 1
+            assert {(o['payload']['id'], o['text']) for o in options} == {
+                ('CC0-1.0', 'CC0 1.0')}

@@ -39,6 +39,8 @@ from flask import Flask
 from flask.cli import ScriptInfo
 from flask_celeryext import FlaskCeleryExt
 from invenio_db import InvenioDB, db
+from invenio_indexer import InvenioIndexer
+from invenio_indexer.api import RecordIndexer
 from invenio_jsonschemas import InvenioJSONSchemas
 from invenio_pidstore import InvenioPIDStore
 from invenio_records import InvenioRecords
@@ -48,7 +50,7 @@ from sqlalchemy_utils.functions import create_database, database_exists, \
     drop_database
 
 from invenio_opendefinition import InvenioOpenDefinition
-from invenio_opendefinition.tasks import create_or_update_license_record
+from invenio_opendefinition.loaders import upsert_license_record
 
 
 @pytest.yield_fixture
@@ -74,6 +76,7 @@ def app(od_licenses_json):
     InvenioDB(app)
     InvenioJSONSchemas(app)
     InvenioRecords(app)
+    InvenioIndexer(app)
     InvenioPIDStore(app)
     InvenioOpenDefinition(app)
 
@@ -109,17 +112,15 @@ def script_info(app):
 
 
 @pytest.fixture
-def loaded_example_licenses(app, od_licenses_json):
+def loaded_example_licenses(app, es, od_licenses_json):
+    license_records = {}
     with app.app_context():
-        for key in od_licenses_json:
-            create_or_update_license_record(od_licenses_json[key])
-    for key in od_licenses_json:
-        od_licenses_json[key]['$schema'] = 'http://{0}{1}/{2}'.format(
-            app.config['JSONSCHEMAS_HOST'],
-            app.config['JSONSCHEMAS_ENDPOINT'],
-            app.config['OPENDEFINITION_SCHEMAS_DEFAULT_LICENSE']
-        )
-    return od_licenses_json
+        for key, license in od_licenses_json.items():
+            license_records[key] = upsert_license_record(license)
+            db.session.commit()
+            RecordIndexer().index_by_id(license_records[key].id)
+    es.flush_and_refresh('licenses')
+    return license_records
 
 
 @pytest.yield_fixture
