@@ -24,15 +24,20 @@ services:
   - postgresql
 
 env:
-  - REQUIREMENTS=lowest EXTRAS=all,sqlite SQLALCHEMY_DATABASE_URI="sqlite:///test.db" ES_VERSION=2.2.0
-  - REQUIREMENTS=lowest EXTRAS=all,mysql SQLALCHEMY_DATABASE_URI="mysql+pymysql://travis@localhost:3306/invenio" ES_VERSION=2.2.0
-  - REQUIREMENTS=lowest EXTRAS=all,postgresql SQLALCHEMY_DATABASE_URI="postgresql+psycopg2://postgres@localhost:5432/invenio" ES_VERSION=2.2.0
-  - REQUIREMENTS=release EXTRAS=all,sqlite SQLALCHEMY_DATABASE_URI="sqlite:///test.db" ES_VERSION=2.2.0
-  - REQUIREMENTS=release EXTRAS=all,mysql SQLALCHEMY_DATABASE_URI="mysql+pymysql://travis@localhost:3306/invenio" ES_VERSION=2.2.0
-  - REQUIREMENTS=release E2E_WEBDRIVER_BROWSERS="Firefox" EXTRAS=all,postgresql SQLALCHEMY_DATABASE_URI="postgresql+psycopg2://postgres@localhost:5432/invenio" ES_VERSION=2.2.0
-  - REQUIREMENTS=devel EXTRAS=all,sqlite SQLALCHEMY_DATABASE_URI="sqlite:///test.db" ES_VERSION=2.2.0
-  - REQUIREMENTS=devel EXTRAS=all,mysql SQLALCHEMY_DATABASE_URI="mysql+pymysql://travis@localhost:3306/invenio" ES_VERSION=2.2.0
-  - REQUIREMENTS=devel EXTRAS=all,postgresql SQLALCHEMY_DATABASE_URI="postgresql+psycopg2://postgres@localhost:5432/invenio" ES_VERSION=2.2.0
+  global:
+    - ES2_DOWNLOAD_URL="https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/2.2.0/elasticsearch-2.2.0.tar.gz"
+    - ES5_DOWNLOAD_URL="https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.6.4.tar.gz"
+    - ES6_DOWNLOAD_URL="https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.2.0.tar.gz"
+  matrix:
+  - REQUIREMENTS=lowest EXTRAS=all,sqlite,elasticsearch2 SQLALCHEMY_DATABASE_URI="sqlite:///test.db" ES_URL=$ES2_DOWNLOAD_URL
+  - REQUIREMENTS=lowest EXTRAS=all,mysql,elasticsearch5 SQLALCHEMY_DATABASE_URI="mysql+pymysql://travis@localhost:3306/invenio" ES_URL=$ES5_DOWNLOAD_URL
+  - REQUIREMENTS=lowest EXTRAS=all,postgresql,elasticsearch6 SQLALCHEMY_DATABASE_URI="postgresql+psycopg2://postgres@localhost:5432/invenio" ES_URL=$ES6_DOWNLOAD_URL
+  - REQUIREMENTS=release EXTRAS=all,sqlite,elasticsearch2 SQLALCHEMY_DATABASE_URI="sqlite:///test.db" ES_URL=$ES2_DOWNLOAD_URL
+  - REQUIREMENTS=release EXTRAS=all,mysql,elasticsearch5 SQLALCHEMY_DATABASE_URI="mysql+pymysql://travis@localhost:3306/invenio" ES_URL=$ES5_DOWNLOAD_URL
+  - REQUIREMENTS=release E2E_WEBDRIVER_BROWSERS="Firefox" EXTRAS=all,postgresql,elasticsearch6 SQLALCHEMY_DATABASE_URI="postgresql+psycopg2://postgres@localhost:5432/invenio" ES_URL=$ES6_DOWNLOAD_URL
+  - REQUIREMENTS=devel EXTRAS=all,sqlite,elasticsearch2 SQLALCHEMY_DATABASE_URI="sqlite:///test.db" ES_URL=$ES2_DOWNLOAD_URL
+  - REQUIREMENTS=devel EXTRAS=all,mysql,elasticsearch5 SQLALCHEMY_DATABASE_URI="mysql+pymysql://travis@localhost:3306/invenio" ES_URL=$ES5_DOWNLOAD_URL
+  - REQUIREMENTS=devel EXTRAS=all,postgresql,elasticsearch6 SQLALCHEMY_DATABASE_URI="postgresql+psycopg2://postgres@localhost:5432/invenio" ES_URL=$ES6_DOWNLOAD_URL
 
 
 python:
@@ -41,8 +46,8 @@ python:
 
 before_install:
   - "mkdir /tmp/elasticsearch"
-  - "wget -O - https://download.elasticsearch.org/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/${ES_VERSION}/elasticsearch-${ES_VERSION}.tar.gz | tar xz --directory=/tmp/elasticsearch --strip-components=1"
-  - "/tmp/elasticsearch/bin/plugin install -b mapper-attachments"
+  - "wget -O - $ES_URL | tar xz --directory=/tmp/elasticsearch --strip-components=1"
+  - "if [ ${ES_URL} == ${ES2_DOWNLOAD_URL} ]; then /tmp/elasticsearch/bin/plugin install -b mapper-attachments; fi"
   - "/tmp/elasticsearch/bin/elasticsearch > /tmp/local-es.log &"
   - "travis_retry pip install --upgrade pip setuptools py"
   - "travis_retry pip install twine wheel coveralls requirements-builder"

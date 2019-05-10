@@ -10,6 +10,7 @@ from __future__ import absolute_import, print_function
 
 import json
 
+from elasticsearch import VERSION as ES_VERSION
 from invenio_pidstore.models import PersistentIdentifier
 from invenio_records_rest import InvenioRecordsREST
 from invenio_records_rest.views import create_blueprint
@@ -43,19 +44,34 @@ def test_records_rest(app, es, loaded_example_licenses):
             resp = client.get('/licenses/_suggest?text=mit')
             resp_json = json.loads(resp.get_data(as_text=True))
             assert resp.status_code == 200
-
             options = resp_json['text'][0]['options']
-            assert len(options) == 2
-            assert {(o['payload']['id'], o['text']) for o in options} == {
-                ('MIT', 'MIT License'),
-                ('mitre', 'MITRE Collaborative Virtual Workspace License '
-                 '(CVW License)')}
-
+            if ES_VERSION[0] == 2:
+                assert len(options) == 2
+                assert {(o['payload']['id'], o['text']) for o in options} == {
+                    ('MIT', 'MIT License'),
+                    ('mitre', 'MITRE Collaborative Virtual Workspace License '
+                     '(CVW License)')}
+            elif ES_VERSION[0] > 2:
+                assert len(options) == 2
+                assert {
+                    (o['_source']['id'],
+                     o['_source']['title']) for o in options} == {
+                    ('MIT', 'MIT License'),
+                    ('mitre', 'MITRE Collaborative Virtual Workspace License '
+                     '(CVW License)')}
             resp = client.get('/licenses/_suggest?text=cc0')
             resp_json = json.loads(resp.get_data(as_text=True))
             assert resp.status_code == 200
 
             options = resp_json['text'][0]['options']
-            assert len(options) == 1
-            assert {(o['payload']['id'], o['text']) for o in options} == {
-                ('CC0-1.0', 'CC0 1.0')}
+
+            if ES_VERSION[0] == 2:
+                assert len(options) == 1
+                assert {(o['_source']['id'], o['text']) for o in options} == {
+                    ('CC0-1.0', 'CC0 1.0')}
+            elif ES_VERSION[0] > 2:
+                assert len(options) == 1
+                assert {
+                    (o['_source']['id'],
+                     o['_source']['title']) for o in options} == {
+                    ('CC0-1.0', 'CC0 1.0')}

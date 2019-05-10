@@ -28,6 +28,8 @@ tests_require = [
 
 db_version = '>=1.0.0'
 
+invenio_search_version = '1.0.0'
+
 extras_require = {
     'docs': [
         'Sphinx>=1.4.2',
@@ -42,12 +44,23 @@ extras_require = {
     'sqlite': [
         'invenio-db[versioning]{}'.format(db_version),
     ],
+    'elasticsearch2': [
+        'invenio-search[elasticsearch2]>={}'.format(invenio_search_version),
+    ],
+    'elasticsearch5': [
+        'invenio-search[elasticsearch5]>={}'.format(invenio_search_version),
+    ],
+    'elasticsearch6': [
+        'invenio-search[elasticsearch6]>={}'.format(invenio_search_version),
+    ],
     'tests': tests_require,
 }
 
 extras_require['all'] = []
 for name, reqs in extras_require.items():
-    if name in ('mysql', 'postgresql', 'sqlite'):
+    if name in (
+            'mysql', 'postgresql', 'sqlite',
+            'elasticsearch2', 'elasticsearch5', 'elasticsearch6'):
         continue
     extras_require['all'].extend(reqs)
 
@@ -64,7 +77,6 @@ install_requires = [
     'invenio-pidstore>=1.0.0',
     'invenio-records>=1.0.0',
     'invenio-records-rest>=1.0.0',
-    'invenio-search[elasticsearch2]>=1.0.0',  # support to ES 5/6 not tested
     'jsonref>=0.1',
     'jsonresolver>=0.2.1',
     'jsonschema>=2.5.1',
