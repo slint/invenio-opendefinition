@@ -23,7 +23,8 @@ def indexer_receiver(sender, json=None, record=None, index=None,
                 'input': [json['id'], json['title']],
                 'output': json['title'],
                 'payload': {
-                    'id': json['id']
+                    'id': json['id'],
+                    'title': json['title']
                 },
             }
         elif ES_VERSION[0] > 2:

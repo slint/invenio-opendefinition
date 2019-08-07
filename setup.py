@@ -26,23 +26,11 @@ tests_require = [
     'pytest>=3.3.1',
 ]
 
-db_version = '>=1.0.0'
-
-invenio_search_version = '1.0.0'
+invenio_search_version = '1.2.0'
 
 extras_require = {
     'docs': [
         'Sphinx>=1.4.2',
-    ],
-    # Database version
-    'postgresql': [
-        'invenio-db[postgresql,versioning]{}'.format(db_version),
-    ],
-    'mysql': [
-        'invenio-db[mysql,versioning]{}'.format(db_version),
-    ],
-    'sqlite': [
-        'invenio-db[versioning]{}'.format(db_version),
     ],
     'elasticsearch2': [
         'invenio-search[elasticsearch2]>={}'.format(invenio_search_version),
@@ -53,14 +41,17 @@ extras_require = {
     'elasticsearch6': [
         'invenio-search[elasticsearch6]>={}'.format(invenio_search_version),
     ],
+    'elasticsearch7': [
+        'invenio-search[elasticsearch7]>={}'.format(invenio_search_version),
+    ],
     'tests': tests_require,
 }
 
 extras_require['all'] = []
 for name, reqs in extras_require.items():
     if name in (
-            'mysql', 'postgresql', 'sqlite',
-            'elasticsearch2', 'elasticsearch5', 'elasticsearch6'):
+            'elasticsearch2', 'elasticsearch5',
+            'elasticsearch6', 'elasticsearch7'):
         continue
     extras_require['all'].extend(reqs)
 
@@ -71,16 +62,17 @@ setup_requires = [
 install_requires = [
     'Flask>=0.11.1',
     'click>=6.4',
-    'flask-celeryext>=0.2.0',
-    'invenio-indexer>=1.0.0',
+    'flask-celeryext>=0.3.0',
+    'invenio-indexer>=1.1.0',
     'invenio-jsonschemas>=1.0.0',
     'invenio-pidstore>=1.0.0',
     'invenio-records>=1.0.0',
-    'invenio-records-rest>=1.0.0',
+    'invenio-records-rest>=1.5.0',
     'jsonref>=0.1',
     'jsonresolver>=0.2.1',
     'jsonschema>=2.5.1',
     'requests>=2.9.1',
+    'invenio-db[versioning]>=1.0.0',
 ]
 
 packages = find_packages()
