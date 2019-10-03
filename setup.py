@@ -30,7 +30,7 @@ invenio_search_version = '1.2.0'
 
 extras_require = {
     'docs': [
-        'Sphinx>=1.4.2',
+        'Sphinx>=1.6.7',
     ],
     'elasticsearch2': [
         'invenio-search[elasticsearch2]>={}'.format(invenio_search_version),
@@ -67,7 +67,7 @@ install_requires = [
     'invenio-jsonschemas>=1.0.0',
     'invenio-pidstore>=1.0.0',
     'invenio-records>=1.0.0',
-    'invenio-records-rest>=1.5.0',
+    'invenio-records-rest>=1.6.2',
     'jsonref>=0.1',
     'jsonresolver>=0.2.1',
     'jsonschema>=2.5.1',
