@@ -10,8 +10,8 @@
  Invenio-OpenDefinition
 ========================
 
-.. image:: https://img.shields.io/travis/inveniosoftware/invenio-opendefinition.svg
-        :target: https://travis-ci.org/inveniosoftware/invenio-opendefinition
+.. image:: https://github.com/inveniosoftware/invenio-opendefinition/workflows/CI/badge.svg
+        :target: https://github.com/inveniosoftware/invenio-opendefinition/actions?query=workflow%3ACI
 
 .. image:: https://img.shields.io/coveralls/inveniosoftware/invenio-opendefinition.svg
         :target: https://coveralls.io/r/inveniosoftware/invenio-opendefinition
