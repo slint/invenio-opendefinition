@@ -84,15 +84,18 @@ def harvest_spdx(filepath=None):
 
     # Preprocess the SPDX licenses to conform to the OpenDefinition schema
     licenses = {}
-    for l in spdx_payload['licenses']:
-        licenses[l['licenseId']] = {
-            'id': l['licenseId'],
-            'url': l['seeAlso'][-1],  # Last link is the most recent/valid
-            'title': l['name'],
+    for license_ in spdx_payload['licenses']:
+        licenses[license_['licenseId']] = {
+            'id': license_['licenseId'],
+            # Last link is the most recent/valid
+            'url': license_['seeAlso'][-1],
+            'title': license_['name'],
             'family': '',
             'maintainer': '',
-            'status': 'retired' if l['isDeprecatedLicenseId'] else 'active',
-            'osd_conformance': ('approved' if l['isOsiApproved']
+            'status': ('retired'
+                       if license_['isDeprecatedLicenseId']
+                       else 'active'),
+            'osd_conformance': ('approved' if license_['isOsiApproved']
                                 else 'not reviewed'),
             'od_conformance': 'not reviewed',
             'domain_content': False,
