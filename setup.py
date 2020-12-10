@@ -16,7 +16,7 @@ readme = open('README.rst').read()
 history = open('CHANGES.rst').read()
 
 tests_require = [
-    'httpretty>=0.8.14',
+    'httpretty>=1.0.3',
     'pytest-invenio>=1.4.0'
 ]
 
@@ -54,9 +54,9 @@ setup_requires = [
 ]
 
 install_requires = [
-    'Flask>=0.11.1',
-    'click>=6.4',
-    'flask-celeryext>=0.3.0',
+    'Flask>=1.0.4',
+    'click>=7.0',
+    'flask-celeryext>=0.3.4',
     'invenio-indexer>=1.1.0',
     'invenio-jsonschemas>=1.0.0',
     'invenio-pidstore>=1.0.0',

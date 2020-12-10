@@ -92,8 +92,7 @@ def harvest_spdx(filepath=None):
             'title': license_['name'],
             'family': '',
             'maintainer': '',
-            'status': ('retired'
-                       if license_['isDeprecatedLicenseId']
+            'status': ('retired' if license_['isDeprecatedLicenseId']
                        else 'active'),
             'osd_conformance': ('approved' if license_['isOsiApproved']
                                 else 'not reviewed'),

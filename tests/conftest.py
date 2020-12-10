@@ -97,6 +97,7 @@ def script_info(app):
 
 @pytest.fixture
 def loaded_example_licenses(app, es, od_licenses_json):
+    """Fixture example loaded licenses."""
     license_records = {}
     with app.app_context():
         for key, license in od_licenses_json.items():
@@ -109,6 +110,7 @@ def loaded_example_licenses(app, es, od_licenses_json):
 
 @pytest.yield_fixture
 def license_server_mock(app, od_licenses_json, spdx_licenses_json):
+    """License server mock fixture."""
     httpretty.register_uri(
         httpretty.GET,
         app.config['OPENDEFINITION_LICENSES_URL'],
@@ -128,22 +130,26 @@ def license_server_mock(app, od_licenses_json, spdx_licenses_json):
 
 @pytest.fixture(scope="session")
 def od_licenses_path():
+    """OD licenses JSON path fixture."""
     return join(dirname(__file__), 'data', 'opendefinition.json')
 
 
 @pytest.fixture(scope="session")
 def od_licenses_json(od_licenses_path):
+    """OD licenses JSON fixture."""
     with open(od_licenses_path) as file:
         return json.load(file)
 
 
 @pytest.fixture(scope="session")
 def spdx_licenses_path():
+    """SPDX licenses JSON path fixture."""
     return join(dirname(__file__), 'data', 'spdx.json')
 
 
 @pytest.fixture(scope="session")
 def spdx_licenses_json(spdx_licenses_path):
+    """SPDX licenses JSON fixture."""
     with open(spdx_licenses_path) as file:
         return json.load(file)
 
